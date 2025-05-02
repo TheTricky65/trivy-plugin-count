@@ -3,7 +3,7 @@ Example of Trivy output plugin
 
 ## Installation
 ```shell
-trivy plugin install github.com/aquasecurity/trivy-plugin-count
+trivy plugin install github.com/TheTricky65/trivy-plugin-count
 ```
 
 ## Usage
