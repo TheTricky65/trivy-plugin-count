@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/aquasecurity/trivy/pkg/types"
@@ -24,10 +25,17 @@ func run() error {
 		return err
 	}
 
-	publishedBefore := flag.String("published-before", "", "take vulnerabilities published before the specified timestamp (ex. 2019-11-04)")
-	publishedAfter := flag.String("published-after", "", "take vulnerabilities published after the specified timestamp (ex. 2019-11-04)")
+	// Command-line flags
+	publishedBefore := flag.String("published-before", "", "take vulnerabilities published before the 
+specified timestamp (ex. 2019-11-04)")
+	publishedAfter := flag.String("published-after", "", "take vulnerabilities published after the specified 
+timestamp (ex. 2019-11-04)")
+	severityFilter := flag.String("severity", "", "comma-separated list of severity levels to filter 
+vulnerabilities (e.g., Critical,High,Medium)")
+
 	flag.Parse()
 
+	// Parse date filters
 	var before, after time.Time
 	var err error
 	if *publishedBefore != "" {
@@ -43,9 +51,20 @@ func run() error {
 		}
 	}
 
+	// Parse severity filter
+	var severities map[string]bool
+	if *severityFilter != "" {
+		severities = make(map[string]bool)
+		for _, severity := range strings.Split(*severityFilter, ",") {
+			severities[strings.TrimSpace(severity)] = true
+		}
+	}
+
+	// Count vulnerabilities that match the criteria
 	var count int
 	for _, result := range report.Results {
 		for _, vuln := range result.Vulnerabilities {
+			// Check for publication date filtering
 			if (!before.IsZero() || !after.IsZero()) && vuln.PublishedDate == nil {
 				continue
 			}
@@ -53,9 +72,17 @@ func run() error {
 				(!after.IsZero() && vuln.PublishedDate.Before(after)) {
 				continue
 			}
+
+			// Check for severity filtering
+			if len(severities) > 0 && !severities[vuln.Severity] {
+				continue
+			}
+
 			count += 1
 		}
 	}
+
 	fmt.Printf("Number of vulnerabilities: %d\n", count)
 	return nil
 }
+
