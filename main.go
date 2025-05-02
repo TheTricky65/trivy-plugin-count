@@ -19,23 +19,17 @@ func main() {
 }
 
 func run() error {
-	// First we read Stdin to avoid Trivy freezing if we get an error
 	var report types.Report
 	if err := json.NewDecoder(os.Stdin).Decode(&report); err != nil {
 		return err
 	}
 
-	// Command-line flags
-	publishedBefore := flag.String("published-before", "", "take vulnerabilities published before the 
-specified timestamp (ex. 2019-11-04)")
-	publishedAfter := flag.String("published-after", "", "take vulnerabilities published after the specified 
-timestamp (ex. 2019-11-04)")
-	severityFilter := flag.String("severity", "", "comma-separated list of severity levels to filter 
-vulnerabilities (e.g., Critical,High,Medium)")
+	publishedBefore := flag.String("published-before", "", "take vulnerabilities published before the specified timestamp (ex. 2019-11-04)")
+	publishedAfter := flag.String("published-after", "", "take vulnerabilities published after the specified timestamp (ex. 2019-11-04)")
+	severityFilter := flag.String("severity", "", "comma-separated list of severity levels (e.g., Critical,High)")
 
 	flag.Parse()
 
-	// Parse date filters
 	var before, after time.Time
 	var err error
 	if *publishedBefore != "" {
@@ -51,7 +45,6 @@ vulnerabilities (e.g., Critical,High,Medium)")
 		}
 	}
 
-	// Parse severity filter
 	var severities map[string]bool
 	if *severityFilter != "" {
 		severities = make(map[string]bool)
@@ -60,11 +53,9 @@ vulnerabilities (e.g., Critical,High,Medium)")
 		}
 	}
 
-	// Count vulnerabilities that match the criteria
 	var count int
 	for _, result := range report.Results {
 		for _, vuln := range result.Vulnerabilities {
-			// Check for publication date filtering
 			if (!before.IsZero() || !after.IsZero()) && vuln.PublishedDate == nil {
 				continue
 			}
@@ -72,17 +63,13 @@ vulnerabilities (e.g., Critical,High,Medium)")
 				(!after.IsZero() && vuln.PublishedDate.Before(after)) {
 				continue
 			}
-
-			// Check for severity filtering
 			if len(severities) > 0 && !severities[vuln.Severity] {
 				continue
 			}
-
-			count += 1
+			count++
 		}
 	}
 
 	fmt.Printf("Number of vulnerabilities: %d\n", count)
 	return nil
 }
-
