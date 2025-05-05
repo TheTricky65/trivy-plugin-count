@@ -29,6 +29,11 @@ func run() error {
 
 	flag.Parse()
 
+	// Debug: Print parsed flags
+	fmt.Println("Published Before:", *publishedBefore)
+	fmt.Println("Published After:", *publishedAfter)
+	fmt.Println("Severity Filter:", *severityFilter)
+
 	// Parse date filters
 	var before, after time.Time
 	if *publishedBefore != "" {
