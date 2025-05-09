@@ -19,20 +19,29 @@ func main() {
 }
 
 func run() error {
-	var report types.Report
-	if err := json.NewDecoder(os.Stdin).Decode(&report); err != nil {
-		return err
-	}
+	// New flag for local file
+	reportPath := flag.String("report", "", "path to local Trivy JSON report file")
 	publishedBefore := flag.String("published-before", "", "take vulnerabilities published before the specified timestamp (ex. 2019-11-04)")
 	publishedAfter := flag.String("published-after", "", "take vulnerabilities published after the specified timestamp (ex. 2019-11-04)")
 	severityFilter := flag.String("severity", "", "comma-separated list of severity levels (e.g., Critical,High)")
 
 	flag.Parse()
 
-	// Debug: Print parsed flags
-	fmt.Println("Published Before:", *publishedBefore)
-	fmt.Println("Published After:", *publishedAfter)
-	fmt.Println("Severity Filter:", *severityFilter)
+	if *reportPath == "" {
+		return fmt.Errorf("report path must be provided using the --report flag")
+	}
+
+	// Open the report file
+	file, err := os.Open(*reportPath)
+	if err != nil {
+		return fmt.Errorf("failed to open report file: %w", err)
+	}
+	defer file.Close()
+
+	var report types.Report
+	if err := json.NewDecoder(file).Decode(&report); err != nil {
+		return fmt.Errorf("failed to decode JSON report: %w", err)
+	}
 
 	// Parse date filters
 	var before, after time.Time
@@ -62,6 +71,7 @@ if *severityFilter != "" {
 // Apply filters and count per severity
 counts := make(map[string]int)
 totalCount := 0
+totalCountSeverities := 0
 
 for _, result := range report.Results {
 	for _, vuln := range result.Vulnerabilities {
@@ -73,6 +83,7 @@ for _, result := range report.Results {
 			continue
 		}
 
+		totalCount++
 		severity := strings.ToUpper(vuln.Severity)
 
 		if len(severities) > 0 && !severities[severity] {
@@ -80,7 +91,7 @@ for _, result := range report.Results {
 		}
 
 		counts[severity]++
-		totalCount++
+		totalCountSeverities++
 	}
 }
 
@@ -89,6 +100,7 @@ fmt.Println("Vulnerability count by severity:")
 for severity := range severities {
 	fmt.Printf("  %s: %d\n", severity, counts[severity])
 }
-fmt.Printf("Total vulnerabilities: %d\n", totalCount)
+fmt.Printf("Total vulnerabilities -  selected severities: %d\n", totalCountSeverities)
+fmt.Printf("Total vulnerabilities - all severities: %d\n", totalCount)
 return nil
 }

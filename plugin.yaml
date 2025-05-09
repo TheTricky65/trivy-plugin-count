@@ -13,9 +13,9 @@ platforms:
     uri: https://github.com/aquasecurity/trivy-plugin-count/releases/download/v0.2.0/trivy_plugin_count_0.2.0_darwin-amd64.tar.gz
     bin: ./count
   - selector:
-      os: darwin
+      os: darwin  
       arch: arm64
-    uri: https://github.com/aquasecurity/trivy-plugin-count/releases/download/v0.2.0/trivy_plugin_count_0.2.0_darwin-arm64.tar.gz
+    uri: https://github.com/TheTricky65/trivy-plugin-count/releases/download/latest/plugin-count.2.1.tar.gz
     bin: ./count
   - selector:
       os: linux
