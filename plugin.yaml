@@ -1,10 +1,14 @@
 name: count
-version: v0.3.0
+version: v0.1.0
 description: A plugin to count vulnerabilities in Trivy scan results
 usage: trivy count [flags] [image]
 platforms:
   - os: darwin
     arch: arm64
-    uri: https://github.com/TheTricky65/trivy-plugin-count/releases/download/macos/plugin-count.0.1.0.tar.gz
-
-
+    bin: ./darwin_arm64/trivy-plugin-count
+  - os: linux
+    arch: amd64
+    bin: ./linux_amd64/trivy-plugin-count
+  - os: windows
+    arch: amd64
+    bin: ./windows_amd64/trivy-plugin-count.exe
