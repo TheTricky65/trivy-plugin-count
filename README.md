@@ -21,7 +21,7 @@ go build
 
 Below are the steps for the current official plugin count to exist.
 
-## Usage
+## How the inital count plugin is used
 
 ```shell
 trivy <target> --format json --output plugin=count [--output-plugin-arg plugin_flags] <target_name>
