@@ -2,7 +2,7 @@
 FROM aquasec/trivy:latest
 
 WORKDIR /home
-COPY /plugin /home
+COPY /debian12_report.json /home
 RUN ls /home
 COPY scanner.sh /home/scanner.sh
 RUN chmod +x /home/scanner.sh
