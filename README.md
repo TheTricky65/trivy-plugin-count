@@ -1,10 +1,25 @@
 # trivy-plugin-count
-Example of Trivy output plugin
+Using this already made version of the plugin trivy-plugin-count.
 
 ## Installation
 ```shell
 trivy plugin install github.com/TheTricky65/trivy-plugin-count
 ```
+## Usage
+
+1) build the go project 
+```shell
+go build 
+```
+2) execute the binary
+```shell
+./trivy-plugin-count --report <Trivy json report path> --severity <severity>
+```
+
+
+
+
+Below are the steps for the current official plugin count to exist.
 
 ## Usage
 
