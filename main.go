@@ -20,7 +20,7 @@ func main() {
 
 func run() error {
 	// New flag for local file
-	reportPath := flag.String("report_path", "", "path to local Trivy JSON report file")
+	reportPath := flag.String("report", "", "path to local Trivy JSON report file")
 	publishedBefore := flag.String("published-before", "", "take vulnerabilities published before the specified timestamp (ex. 2019-11-04)")
 	publishedAfter := flag.String("published-after", "", "take vulnerabilities published after the specified timestamp (ex. 2019-11-04)")
 	severityFilter := flag.String("severity", "", "comma-separated list of severity levels (e.g., Critical,High)")
