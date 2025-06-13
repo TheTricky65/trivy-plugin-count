@@ -1,29 +1,10 @@
-name: "count"
-version: "0.2.1"
-repository: github.com/TheTricky65/trivy-plugin-count
-maintainer: aquasecurity
-summary: Count vulnerabilities
-description: |-
-  An example output plugin
-output: true
+name: count
+version: v0.3.0
+description: A plugin to count vulnerabilities in Trivy scan results
+usage: trivy count [flags] [image]
 platforms:
-  - selector:
-      os: darwin
-      arch: amd64
-    uri: https://github.com/aquasecurity/trivy-plugin-count/releases/download/v0.2.0/trivy_plugin_count_0.2.0_darwin-amd64.tar.gz
-    bin: ./count
-  - selector:
-      os: darwin  
-      arch: arm64
-    uri: https://github.com/TheTricky65/trivy-plugin-count/releases/download/latest/plugin-count.2.1.tar.gz
-    bin: ./count
-  - selector:
-      os: linux
-      arch: amd64
-    uri: https://github.com/aquasecurity/trivy-plugin-count/releases/download/v0.2.0/trivy_plugin_count_0.2.0_linux-amd64.tar.gz
-    bin: ./count
-  - selector:
-      os: linux
-      arch: arm64
-    uri: https://github.com/aquasecurity/trivy-plugin-count/releases/download/v0.2.0/trivy_plugin_count_0.2.0_linux-arm64.tar.gz
-    bin: ./count
+  - os: darwin
+    arch: arm64
+    uri: https://github.com/TheTricky65/trivy-plugin-count/releases/download/untagged-659fcbb88e85c8177608/plugin-count.2.1.tar.gz
+
+
