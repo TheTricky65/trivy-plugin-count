@@ -1,6 +1,6 @@
 name: "severitycount"
 version: "0.1.0"
-repository: "https://github.com/example/trivy-plugin-hello"
+repository: "https://github.com/TheTricky65/trivy-plugin-severitycount"
 maintainer: "You"
 summary: "Hello plugin"
 description: |
@@ -11,5 +11,5 @@ platforms:
   - selector:
       os: darwin
       arch: arm64
-    uri: ./trivy-sev
+    uri: https://github.com/TheTricky65/trivy-plugin-severitycount/releases/download/latest/mysev_darwin-arm64.tar.gz
     bin: ./trivy-sev
