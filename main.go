@@ -47,69 +47,80 @@ func run() error {
 		}
 	}
 
-
-
 	// Parse and normalize severity filter
-		var severityFilterMap map[string]bool
+	var severityFilterMap map[string]bool
 	if *severityFilter != "" {
 		severityFilterMap = make(map[string]bool)
 		for _, s := range strings.Split(*severityFilter, ",") {
 			normalized := strings.ToUpper(strings.TrimSpace(s))
 			if normalized != "" {
 				severityFilterMap[normalized] = true
-			} 
+			}
 		}
-	} else {
-		severityFilterMap = nil
 	}
-
 
 	// Count severities
 	counts := make(map[string]int)
-	countTotalfiltered := 0
-	total := 0 
-
+	total := 0
+	filteredSeverityTotal := 0
+	publishedBeforeCount := 0
+	publishedAfterCount := 0
 
 	for _, result := range report.Results {
 		for _, vuln := range result.Vulnerabilities {
 
-			//total ++	
 			if (!before.IsZero() || !after.IsZero()) && vuln.PublishedDate == nil {
 				continue
 			}
-			if (!before.IsZero() && vuln.PublishedDate.After(before)) ||
-				(!after.IsZero() && vuln.PublishedDate.Before(after)) {
+			if !before.IsZero() && vuln.PublishedDate.After(before) {
 				continue
 			}
-			total ++
+			if !after.IsZero() && vuln.PublishedDate.Before(after) {
+				continue
+			}
+
+			total++
+
+			// Count for before/after filters individually
+			if !before.IsZero() && vuln.PublishedDate != nil && vuln.PublishedDate.Before(before) {
+				publishedBeforeCount++
+			}
+			if !after.IsZero() && vuln.PublishedDate != nil && vuln.PublishedDate.After(after) {
+				publishedAfterCount++
+			}
+
 			severity := strings.ToUpper(strings.TrimSpace(vuln.Severity))
 			if severity == "" {
 				severity = "UNKNOWN"
 			}
 
 			counts[severity]++
-		
+
+			if severityFilterMap != nil && severityFilterMap[severity] {
+				filteredSeverityTotal++
+			}
 		}
 	}
 
-	// Print all severities
-	///fmt.Println("\nVulnerability count by severity:")
-	///for severity, count := range counts {
-	///	fmt.Printf("  %s: %d\n", severity, count)
-	//}
+	// === OUTPUT FORMATTING ===
 
-	// Print selected severities (if filtered)
 	if severityFilterMap != nil {
-		fmt.Println("\nFiltered severities (selected via --severity-plugin):")
 		for severity := range severityFilterMap {
-			fmt.Printf("  %s: %d\n", severity, counts[severity])
-			countTotalfiltered += counts[severity]
+			fmt.Printf(`Number of "%s" vulnerabilities: %d`+"\n", severity, counts[severity])
 		}
 	}
 
-	fmt.Printf("Number of vulnerabilities for selected severities: %d\n", countTotalfiltered)
-	fmt.Printf("Number of total vulnerabilities: %d\n", total)
+	if *publishedAfter != "" {
+		fmt.Printf(`Number of vulns published after "%s": %d`+"\n", *publishedAfter, publishedAfterCount)
+	}
 
+	if *publishedBefore != "" {
+		fmt.Printf(`Number of vulns published before "%s": %d`+"\n", *publishedBefore, publishedBeforeCount)
+	}
+
+	if *publishedAfter == "" && *publishedBefore == "" && severityFilterMap == nil {
+		fmt.Printf("Number of total vulnerabilities: %d\n", total)
+	}
 
 	return nil
 }
