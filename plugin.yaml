@@ -1,15 +1,15 @@
-name: "trivy-plugin-severitycount"
+name: "severitycount"
 version: "0.1.0"
-repository: "https://github.com/TheTricky65/trivy-plugin-severitycount"
-maintainer: "TheTricky65"
-summary: "Count plugin + severity counting"
+repository: "https://github.com/example/trivy-plugin-hello"
+maintainer: "You"
+summary: "Hello plugin"
 description: |
-  Counts vulnerabilities by severity from a Trivy JSON report.
+  A basic test plugin that prints Hello World from a Python script.
 output: false
 
 platforms:
   - selector:
       os: darwin
       arch: arm64
-    uri: "https://github.com/TheTricky65/trivy-plugin-severitycount/releases/download/v1/myplugin.tar.gz"
-    bin: severitycount
+    uri: ./trivy-sev
+    bin: ./trivy-sev
