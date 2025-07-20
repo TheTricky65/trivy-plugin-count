@@ -1,33 +1,33 @@
 name: "severitycount"
 version: "0.1.0"
-repository: "https://github.com/TheTricky65/trivy-plugin-severitycount"
+repository: "https://github.com/TheTricky65/trivy-plugin-count"
 maintainer: "You"
-summary: "Hello plugin"
+summary: "Severity count"
 description: |
-  A basic test plugin that prints Hello World from a Python script.
+  A basic plugin that counts vulnerabilites by a selected severity
 output: false
 
 platforms:
   - selector:
       os: darwin
       arch: arm64
-    uri: https://github.com/TheTricky65/trivy-plugin-severitycount/releases/download/latest/mysev_darwin-arm64.tar.gz
+    uri: https://github.com/TheTricky65/trivy-plugin-count/releases/download/latest/mysev_darwin-arm64.tar.gz
     bin: ./trivy-sev
 
   - selector:
       os: darwin
       arch: amd64
-    uri: https://github.com/TheTricky65/trivy-plugin-severitycount/releases/download/v1/mysev_darwin-amd64.tar.gz
+    uri: https://github.com/TheTricky65/trivy-plugin-count/releases/download/v1/mysev_darwin-amd64.tar.gz
     bin: ./trivy-sev-darwin-amd64
 
   - selector:
       os: linux
       arch: amd64
-    uri: https://github.com/TheTricky65/trivy-plugin-severitycount/releases/download/v1.1/mysev_linux-amd64.tar.gz
+    uri: https://github.com/TheTricky65/trivy-plugin-count/releases/download/v1.1/mysev_linux-amd64.tar.gz
     bin: ./trivy-sev-linux-amd64
 
   - selector:
       os: linux
       arch: arm64
-    uri: https://github.com/TheTricky65/trivy-plugin-severitycount/releases/download/v1.2/mysev_linux-arm64.tar.gz
+    uri: https://github.com/TheTricky65/trivy-plugin-count/releases/download/v1.2/mysev_linux-arm64.tar.gz
     bin: ./trivy-sev-linux-arm64
